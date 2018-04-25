@@ -110,7 +110,7 @@ class OrbitDB {
   }
 
   /* Private methods */
-  async _createStore (type, address, options) {
+  async _createStore (type, address, name, options) {
     // Get the type -> class mapping
     const Store = databaseTypes[type]
 
@@ -143,7 +143,7 @@ class OrbitDB {
     // this is what hooks us into the message propagation layer
     // and the p2p network
     if(opts.replicate && this._pubsub)
-      this._pubsub.subscribe(addr, this._onMessage.bind(this), this._onPeerConnected.bind(this))
+      this._pubsub.subscribe(name, this._onMessage.bind(this), this._onPeerConnected.bind(this))
 
     return store
   }
@@ -331,7 +331,7 @@ class OrbitDB {
 
     // Open the the database
     options = Object.assign({}, options, { accessControllerAddress: manifest.accessController })
-    return this._createStore(manifest.type, dbAddress, options)
+    return this._createStore(manifest.type, dbAddress, address, options)
   }
 
   // Save the database locally
