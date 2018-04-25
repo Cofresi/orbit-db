@@ -135,9 +135,8 @@ class OrbitDB {
     const store = new Store(this._ipfs, this.id, address, opts)
     store.events.on('write', this._onWrite.bind(this))
 
-    // ID of the store is the address as a string
-    const addr = address.toString()
-    this.stores[addr] = store
+    // ID of the store is the name of the db
+    this.stores[name] = store
 
     // Subscribe to pubsub to get updates from peers,
     // this is what hooks us into the message propagation layer
