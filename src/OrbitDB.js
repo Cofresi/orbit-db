@@ -31,8 +31,8 @@ class OrbitDB {
   constructor(ipfs, directory, options = {}) {
     this._ipfs = ipfs
     this.id = options.peerId || (this._ipfs._peerInfo ? this._ipfs._peerInfo.id._idB58String : 'default')
-    this._pubsub = options && options.broker 
-      ? new options.broker(this._ipfs) 
+    this._pubsub = options && options.broker
+      ? new options.broker(this._ipfs)
       : new Pubsub(this._ipfs, this.id)
     this.stores = {}
     this.directory = directory || './orbitdb'
@@ -97,7 +97,7 @@ class OrbitDB {
     Object.keys(this._directConnections).forEach(removeDirectConnect)
 
     // Disconnect from pubsub
-    if (this._pubsub) 
+    if (this._pubsub)
       this._pubsub.disconnect()
 
     // Remove all databases from the state
@@ -125,8 +125,8 @@ class OrbitDB {
 
     const cache = await this._loadCache(this.directory, address)
 
-    const opts = Object.assign({ replicate: true }, options, { 
-      accessController: accessController, 
+    const opts = Object.assign({ replicate: true }, options, {
+      accessController: accessController,
       keystore: this.keystore,
       cache: cache,
       onClose: this._onClose.bind(this),
@@ -149,6 +149,7 @@ class OrbitDB {
 
   // Callback for local writes to the database. We the update to pubsub.
   _onWrite (address, entry, heads) {
+	  console.log('_onWrite', address);
     if(!heads) throw new Error("'heads' not defined")
     if(this._pubsub) this._pubsub.publish(address, heads)
   }
@@ -184,7 +185,7 @@ class OrbitDB {
       onMessage,
       onChannelCreated
     )
- 
+
     if (getStore(address))
       getStore(address).events.emit('peer', peer)
   }
@@ -330,7 +331,7 @@ class OrbitDB {
 
     // Open the the database
     options = Object.assign({}, options, { accessControllerAddress: manifest.accessController })
-    return this._createStore(manifest.type, dbAddress, address, options)
+    return this._createStore(manifest.type, dbAddress, dbAddress.path, options)
   }
 
   // Save the database locally
